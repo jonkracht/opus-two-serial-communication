@@ -1,24 +1,32 @@
 Jon Kracht 
-July 2021
+Started July 2021
+Updated December 2021
+
 
 Procedure to allow serial communication between a Linux computer and the Opus Two Control System (hereafter abbreviated O2)
 
-################################################
 
-Summary of the procedure
-1.)  Connect PC to O2 with a cable of some sort
-2.)  Modify permissions of device to allow communication
-3.)  Install minicom, a terminal-based serial communication program
-4.)  Create a configuration file of parameters required by O2
-5.)  Begin communication with O2
-6.)  Do things (modify trems, upload 02 config files, etc.)
+---
 
-##############################################################
+
+Summary of the procedure  
+1.)  Connect PC to O2 with a cable of some sort  
+2.)  Modify permissions of device to allow communication  
+3.)  Install minicom, a terminal-based serial communication program  
+4.)  Create a configuration file of parameters required by O2  
+5.)  Begin communication with O2  
+6.)  Do things (modify trems, upload 02 config files, etc.)  
+
+
+---
+
 
 Caveats:
 This procedure was developed on a Linux laptop running Ubuntu 20.04 and used a USB-C to USB-A cable to connect to O2.  If your particular circumstances are different, procedure may also be different.
 
-############################################################
+
+---
+
 
 1.  Connect PC to O2 via cable
 
