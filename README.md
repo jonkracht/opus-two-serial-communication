@@ -1,6 +1,6 @@
-Jon Kracht 
-Started July 2021
-Updated December 2021
+Jon Kracht   
+Started July 2021  
+Updated December 2021  
 
 
 Procedure to allow serial communication between a Linux computer and the Opus Two Control System (hereafter abbreviated O2)
@@ -9,7 +9,7 @@ Procedure to allow serial communication between a Linux computer and the Opus Tw
 ---
 
 
-##Summary of the procedure  
+## Summary of the procedure  
 1. Connect PC to O2 with a cable of some sort  
 2. Modify permissions of device to allow communication  
 3. Install minicom, a terminal-based serial communication program  
@@ -21,20 +21,20 @@ Procedure to allow serial communication between a Linux computer and the Opus Tw
 ---
 
 
-##Caveats:
+## Caveats:
 This procedure was developed on a Linux laptop running Ubuntu 20.04 and used a USB-C to USB-A cable to connect to O2.  If your particular circumstances are different, procedure may also be different.
 
 
 ---
 
 
-###1.  Connect PC to O2 via cable
+### 1.  Connect PC to O2 via cable
 
 02 requires a USB-C.  Find a cable that can connect your computer which is USB-C on the other end.  My laptop has USB-A ports so that is what we will use.
 
 
 
-###2.  Modify device permissions
+### 2.  Modify device permissions
 
 Once the computer and O2 are physically connected by cable, locate the device in the Linux filesystem.  Since a USB-A port was used in the previous step, the device is located at /dev/ttyUSB0.
 In your favorite terminal (alacritty, xterm, gnome-terminal, etc.), run the following to determine the device name:
@@ -46,7 +46,7 @@ where DEVICE_NAME was identified previously.  Since sudo is used, you'll need ro
 
 
 
-###3.  Install minicom
+### 3.  Install minicom
 
 
 We'll use a minicom to configure serial communication.
@@ -62,7 +62,7 @@ sudo apt install minicom
 
 
 
-###4.  Create a config file
+### 4.  Create a config file
 
 Now that minicom is installed, we'll create a configuration file setting parameters given in page 20 of the O2 manual (reference?) and are repeated here for convenience:
  
@@ -89,7 +89,7 @@ Config files are saved to /etc/minicom/
 
 
 
-##5.  Begin communication
+### 5.  Begin communication
 
 If configuration was saved as default, simply type minicom in a terminal.  
 
@@ -109,7 +109,7 @@ P for communication parameters
 
 
 
-###6.  Do things.
+### 6.  Do things.
 
 Upload new Opus Two configuration file
 1.  Hold CTRL + Q to reset the controller (terminal menu and pdf manual are inconsistent)
