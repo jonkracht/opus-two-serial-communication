@@ -1,0 +1,6 @@
+# Machine-generated file - use "minicom -s" to change parameters.
+pu port             /dev/ttyUSB0
+pu baudrate         921600
+pu updir            /PATH/TO/UP/DIR
+pu downdir          /PATH/TO/DOWN/DIR
+pu rtscts           No

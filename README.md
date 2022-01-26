@@ -1,28 +1,20 @@
 Jon Kracht   
-Started July 2021  
-Updated January 2022
+Originally created July 2021; updated January 2022
 
 
-Procedure to allow serial communication between a Linux computer and the Opus Two Control System (hereafter abbreviated O2)
+Procedure to set up serial communication between a Linux computer and the Opus Two Control System, hereafter referred to as "O2"
 
 
----
 
 
 ## Summary of the procedure  
-1. Install minicom, a terminal-based serial communication program  
-2. Connect PC to O2 with a cable of some sort  
+1. Install minicom 
+2. Connect PC to O2 via cable  
 3. Modify permissions of device to allow communication  
-4. Create a configuration file of parameters required by O2  
-5. Begin communication with O2  
-6. Do things (modify trems, upload 02 config files, etc.)  
+4. Create a configuration file of communication parameters  
+5. Begin communication  
+6. Do things (modify tremolo speed/depth, upload O2 config files, etc.)  
 
-
----
-
-
-## Caveats:
-This procedure was developed on a Linux laptop running Ubuntu 20.04 and used a USB-C to USB-A cable to connect to O2.  If your particular circumstances are different, procedure may also be different.
 
 
 ---
@@ -31,61 +23,72 @@ This procedure was developed on a Linux laptop running Ubuntu 20.04 and used a U
 ### 1.  Install minicom
 
 
-We'll use a minicom to configure serial communication.
+We'll use a minicom, a free and open source, terminal-based emulator to configure serial communication.  Some documentation on minicom:
+* [Source code](https://salsa.debian.org/minicom-team/minicom)  
+* [User's manual](https://www.man7.org/linux/man-pages/man1/minicom.1.html)
 
-Some documentation on minicom:
-
-Source:  https://salsa.debian.org/minicom-team/minicom
-Manual:  https://www.man7.org/linux/man-pages/man1/minicom.1.html
-
-On Ubuntu or other Debian based distributions, install minicom in your terminal by:
+On Ubuntu or another Debian-based distribution using the apt package manager, install minicom by opening your favorite terminal (xterm, gnome-terminal, konsole, alacritty, kitty, etc.) and running:
+```bash
 sudo apt install minicom
+```
 
-(On other varieties of Linux, the procedure will be different.  :( )
+Installation should be reasonably similar in other flavors of Linux.
 
 
 ### 2.  Connect PC to O2 via cable
 
-02 requires a USB-C.  Find a cable that can connect your computer which is USB-C on the other end.  My laptop has USB-A ports so that is what we will use.
+
+O2 utilizes a USB-C port for communication.  Obtain a cable that can connect your computer to this USB-C port.   A USB-A port was available on the computer on which development occured so that is what is used in the following steps.
 
 
 
 ### 3.  Modify device permissions
 
-Once the computer and O2 are physically connected by cable, locate the device in the Linux filesystem.  Since a USB-A port was used in the previous step, the device is located at /dev/ttyUSB0.
-In your favorite terminal (alacritty, xterm, gnome-terminal, etc.), run the following to determine the device name:
+Once the computer and O2 are physically connected via cable,  determine the `DEVICE_NAME` by running:  
+```bash
 dmesg | grep tty
+```
 
-To change the permissions of the device to allow read/write, run:
+In development where a USB-A cable was used, the device name was `ttyUSB0` and was mounted to the filesystem at `/dev/ttyUSB0`.
+To change the permissions of the device to allow both read and write:
+
+```BASH
 sudo chmod 666 /dev/DEVICE_NAME
-where DEVICE_NAME was identified previously.  Since sudo is used, you'll need root access on the system.
+```
+where `DEVICE_NAME` was determined previously.
 
 
 
 ### 4.  Create a config file
 
-Now that minicom is installed, we'll create a configuration file setting parameters given in page 20 of the O2 manual (reference?) and are repeated here for convenience:
- 
-Baud rate 921600 
-8 bit data 
-No Parity 
-1 Stop Bit
-No flow control
+Now that minicom is installed, we'll create a configuration file setting necessary parameters given in the [CVA/CVE Technical Guide](https://www.opustwoics.com/s/ARM-TG-Updaters.pdf) and repeated here for convenience:
+* Baud rate 921600 
+* 8 bit data 
+* No Parity 
+* 1 Stop Bit
+* No flow control
 
-In the terminal run:
+Enter minicom's setup menu by:
+```vim
 sudo minicom -s
+```
 
-Select 'Serial port setup' and enter the parameters
-Additionally, set the location in which files are to be up/downloaded from in the "Filenames and paths" section.
+Navigate using arrow keys, ENTER and ESCAPE.
 
-Save configuration either as minicom's default or to a new, customized name
-- For default, select "Save setup as dfl"
-    When a config file is not explicitly given, minicom runs the default configuration
+Steps to create configuration file:
+1. Input communication parameters by entering "Serial port setup" and:
+    * Check that "Serial Device" lists correct path
+    * Set "Bps/Par/Bits" to 921600 8N1
+    * Set both Hard and Software Flow Controls to 'No'
 
-- For a custom name, choose "Save setup as..".  
-    A name like ttyUSB0.opus-two-cs conveys information about what parameters are set in the config file.
+2. Set the location where files are to be up/downloaded from in the "Filenames and paths"
+    * Input paths in the "Download directory" and "Upload directory" fields.  Can be the same location.
 
-Config files are saved to /etc/minicom/
+3. Save configuration either as the default or to a new, customized name
+    * For default, select "Save setup as dfl". The default is used when minicom is run without explicitly giving a configuration file
+    * For a customized name, choose "Save setup as..".  A name like "ttyUSB0.opus-two-cs" conveys information about what parameters are set in the config file.
+
+Configuration files are saved to `/etc/minicom/` and are given names like `minirc.dfl` or `minirc.ttyUSB0.opus-two-cs`.  An example configuration file is included in this repository.
 
 
 
@@ -119,7 +122,7 @@ Upload new Opus Two configuration file
 5.  Select the .bin configuration file you wish to upload to the controller.
 6.  Witchcraft
 
-#########################################################################
+---
 
 
 Some helpful references:
