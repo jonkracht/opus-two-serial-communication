@@ -2,8 +2,7 @@ Jon Kracht
 Originally created July 2021; updated January 2022
 
 
-Procedure to set up serial communication between a Linux computer and the Opus Two Control System, hereafter referred to as "O2"
-
+Procedure to set up serial communication between a Linux computer and the [Opus Two Control System](https://www.opustwoics.com/), hereafter referred to as "O2"
 
 
 
@@ -73,7 +72,7 @@ Enter minicom's setup menu by:
 sudo minicom -s
 ```
 
-Navigate using arrow keys, ENTER and ESCAPE.
+Navigate menu using arrow keys, ENTER and ESCAPE.
 
 Steps to create configuration file:
 1. Input communication parameters by entering "Serial port setup" and:
@@ -81,46 +80,48 @@ Steps to create configuration file:
     * Set "Bps/Par/Bits" to 921600 8N1
     * Set both Hard and Software Flow Controls to 'No'
 
-2. Set the location where files are to be up/downloaded from in the "Filenames and paths"
+2. Set the location from which files are to be up/downloaded in "Filenames and paths"
     * Input paths in the "Download directory" and "Upload directory" fields.  Can be the same location.
 
 3. Save configuration either as the default or to a new, customized name
     * For default, select "Save setup as dfl". The default is used when minicom is run without explicitly giving a configuration file
-    * For a customized name, choose "Save setup as..".  A name like "ttyUSB0.opus-two-cs" conveys information about what parameters are set in the config file.
+    * For a customized name, choose "Save setup as..".  A name such as "ttyUSB0.opus-two-cs" is desirable in that it conveys information about what parameters are set in the config file.
 
-Configuration files are saved to `/etc/minicom/` and are given names like `minirc.dfl` or `minirc.ttyUSB0.opus-two-cs`.  An example configuration file is included in this repository.
+Configuration files are saved to `/etc/minicom/` and are given names like `minirc.dfl` or `minirc.ttyUSB0.opus-two-cs`.  An example configuration file is included in this repository for reference.
 
 
 
 ### 5.  Begin communication
 
-If configuration was saved as default, simply type minicom in a terminal.  
 
-If saved to a custom name for example YOUR_CUSTOM_NAME, run:
-minicom YOUR_CUSTOM_NAME
+If the configuration file was saved as default in the previous step, simply run `minicom` in a terminal session.  Alternatively, if a custom name was chosen instead, run `minicom CUSTOM_NAME`.
 
-At this point, your computer should be talking to 02 and should be able to follow all instructions given in the 02 manual.
+At this point, the terminal should display "Welcome to the Opus-Two CVA Terminal Interface" menu.
+You should be able to follow instructions given in the O2 manual to complete a desired action.
 
-Minicom has its own set of commands that may be accessed by first pressing CTRL + A and then typing one of the following:
-X to exit and reset
-Z for help menu
-C to clear screen
-S to send files
-R to receive files
-O to configure minicom
-P for communication parameters
+
+Minicom has its own set of commands that may be accessed by first pressing `CTRL + A` and then typing one of the following:
+* X: exit and reset
+* Z: help menu
+* C: clear screen
+* S: send files
+* R: receive files
+* O: configure minicom
+* P: communication parameters
 
 
 
 ### 6.  Do things.
 
-Upload new Opus Two configuration file
-1.  Hold CTRL + Q to reset the controller (terminal menu and pdf manual are inconsistent)
+#### Upload new Opus Two configuration file
+1.  Hold `CTRL + Q` to reset the controller (terminal menu and pdf manual are inconsistent)
 2.  Within 5 seconds, hit any key to enter file transfer mode.
-3.  Press CTRL + A followed by 'S' to send a file.  
+3.  Press `CTRL + A` followed by 'S' to send a file.  
 4.  Select 'xmodem'.  
 5.  Select the .bin configuration file you wish to upload to the controller.
 6.  Witchcraft
+
+#### Modify tremolo parameters
 
 ---
 
