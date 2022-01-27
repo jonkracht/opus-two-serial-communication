@@ -67,6 +67,8 @@ Now that minicom is installed, we'll create a configuration file setting necessa
 * 1 Stop Bit
 * No flow control
 
+![O2-settings](/opus-two-serial-settings.png)
+
 Enter minicom's setup menu by:
 ```vim
 sudo minicom -s
