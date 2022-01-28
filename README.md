@@ -1,5 +1,5 @@
 Jon Kracht   
-Originally created July 2021; updated January 2022
+Initial development July 2021; updated January 2022
 
 
 Procedure to set up serial communication between a Linux computer and the [Opus Two Control System](https://www.opustwoics.com/), hereafter referred to as "O2"
@@ -8,7 +8,7 @@ Procedure to set up serial communication between a Linux computer and the [Opus 
 
 ## Summary of the procedure  
 1. Install minicom 
-2. Connect PC to O2 via cable  
+2. Connect a computer to O2 via cable  
 3. Allow read/write permissions 
 4. Create a configuration file of communication parameters  
 5. Begin communication  
@@ -58,7 +58,7 @@ sudo chmod 666 /dev/DEVICE_NAME
 ```
 where `DEVICE_NAME` was determined previously.
 
-Alternatively, adding the Linux user to the group of which the 'DEVICE_NAME' is a member will provide the desired read/write privilege.  Determine this group by executing:
+Alternatively, adding the Linux user to the group of which the 'DEVICE_NAME' is a member will provide the desired read/write privileges.  Determine this group by executing:
 ```bash
 ls -lah /PATH/TO/DEVICE
 ```
@@ -113,7 +113,6 @@ You should be able to follow instructions given in the O2 manual to perform a de
 
 Minicom has its own set of commands that may be accessed by first pressing `CTRL + A` and then typing one of the following:
 
-<div align="center">
 
 | Key | Action |
 | --- | --- |
@@ -125,7 +124,6 @@ Minicom has its own set of commands that may be accessed by first pressing `CTRL
 | O | Configure `minicom` |
 | P | Communication parameters |
 
-</div>
 
 ### 6.  Do things.
 
@@ -135,19 +133,20 @@ Minicom has its own set of commands that may be accessed by first pressing `CTRL
 3.  Press `CTRL + A` followed by 'S' to send a file.  
 4.  Select 'xmodem'.  
 5.  Select the configuration file (with a filetype '.bin') to be uploaded to the controller.
-6.  Do Witchcraft
+6.  Witchcraft
 
 #### Modify tremolo parameters
 
-Refer in O2 manual.
+Refer to O2 manual.
 
 ---
 
+### Appendix
 
-Some helpful references:
-https://www.poftut.com/install-use-linux-minicom-command-tutorial-examples/
-https://bloggerbust.ca/post/how-to-configure-minicom-to-connect-over-usb-serial-uart/
-https://www.centennialsoftwaresolutions.com/post/configure-minicom-for-a-usb-to-serial-converter
-https://wiki.emacinc.com/wiki/Product_wiki
+A few potentially helpful references:
+* https://www.poftut.com/install-use-linux-minicom-command-tutorial-examples/
+* https://bloggerbust.ca/post/how-to-configure-minicom-to-connect-over-usb-serial-uart/
+* https://www.centennialsoftwaresolutions.com/post/configure-minicom-for-a-usb-to-serial-converter
+* https://wiki.emacinc.com/wiki/Product_wiki
 
 
