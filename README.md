@@ -22,7 +22,7 @@ Procedure to set up serial communication between a Linux computer and the [Opus 
 ### 1.  Install minicom
 
 
-We'll use a minicom, a free and open source, terminal-based emulator to configure serial communication.  Some documentation on minicom:
+We'll use minicom, a free and open source, terminal-based serial communication program to interface with O2 .  Some documentation on minicom:
 * [Source code](https://salsa.debian.org/minicom-team/minicom)  
 * [User's manual](https://www.man7.org/linux/man-pages/man1/minicom.1.html)
 
@@ -60,7 +60,7 @@ where `DEVICE_NAME` was determined previously.
 
 Alternatively, adding the Linux user to the group of which the 'DEVICE_NAME' is a member will provide the desired read/write privilege.  Determine this group by executing:
 ```bash
-ls- lah /PATH/TO/DEVICE
+ls -lah /PATH/TO/DEVICE
 ```
 
 Common groups include 'dialout' and 'uucp'.  Add the user to this group using the `usermod` command.
@@ -83,7 +83,7 @@ Enter minicom's setup menu by:
 sudo minicom -s
 ```
 
-Navigate menu using arrow keys, ENTER and ESCAPE.
+(Note, the above command is executed with superuser privileges since files in the root directory will be created/modified.)  Navigate the menu system using arrow keys (or hjkl in the manner of Vim), ENTER, and ESCAPE.
 
 Steps to create configuration file:
 1. Input communication parameters by entering "Serial port setup" and:
@@ -113,16 +113,19 @@ You should be able to follow instructions given in the O2 manual to perform a de
 
 Minicom has its own set of commands that may be accessed by first pressing `CTRL + A` and then typing one of the following:
 
-|Key | Action  |
-|--- | --- | ---|
-| X | Exit and reset |
-| Z| Help menu|
-| C | Clear screen|
-|S | Send files|
-|R| Receive files|
-|O | Configure `minicom`|
-|P| Communication parameters|
+<div align="center">
 
+| Key | Action |
+| --- | --- |
+| X | Exit and reset |
+| Z | Help menu |
+| C | Clear screen |
+| S | Send files |
+| R | Receive files |
+| O | Configure `minicom` |
+| P | Communication parameters |
+
+</div>
 
 ### 6.  Do things.
 
@@ -136,13 +139,13 @@ Minicom has its own set of commands that may be accessed by first pressing `CTRL
 
 #### Modify tremolo parameters
 
-Refer to Section XYZ in O2 manual.
+Refer in O2 manual.
 
 ---
 
 
 Some helpful references:
-
+https://www.poftut.com/install-use-linux-minicom-command-tutorial-examples/
 https://bloggerbust.ca/post/how-to-configure-minicom-to-connect-over-usb-serial-uart/
 https://www.centennialsoftwaresolutions.com/post/configure-minicom-for-a-usb-to-serial-converter
 https://wiki.emacinc.com/wiki/Product_wiki
