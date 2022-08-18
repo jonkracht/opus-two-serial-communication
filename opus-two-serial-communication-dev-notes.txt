@@ -1,0 +1,29 @@
+Define connection parameters (run with sudo to save to root directory)
+sudo minicom -s
+
+Standard config in /usr/share/doc/minicom/examples/minirc.dfl
+
+Configs are stored in /etc/minicom/
+Default is minirc.dfl
+
+Configs are loaded by removed 'minirc.' prefix
+ex. minirc.NEW_CONFIG is loaded by minicom NEW_CONFIG
+
+Control + A enters command mode, followed by:
+X to exit and reset
+Z for help menu
+C to clear screen
+S to send files
+R to receive files
+O to configure minicom
+P for communication parameters
+
+Vim-style key navigation works
+
+
+
+Other emulator programs tried (to varying degrees):
+putty
+cutecom
+xterm
+uxterm
