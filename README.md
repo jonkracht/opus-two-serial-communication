@@ -113,7 +113,7 @@ sudo usermod -a -G [GROUP_NAME] [USER_NAME]
 
 We'll now create a configuration file setting communication parameters given in the [CVA/CVE Technical Guide](https://www.opustwoics.com/s/ARM-TG-Updaters.pdf) and shown here for convenience:
 
-![O2-settings](/opus-two-serial-settings.png)
+![O2-settings](/opus-two-serial-settings.png)  
 (Page 14)
 
 
@@ -170,7 +170,7 @@ At this point, the terminal should display "Welcome to the Opus-Two CVA Terminal
 Some common things to do.
 
 #### Upload new Opus Two configuration file
-1.  Hold `CTRL + SHIFT + Q` to reset the controller (note, terminal menu and manual are inconsistent)
+1.  Hold `CTRL + SHIFT + Q` to reset the controller (note, terminal menu and manual are inconsistent; also, this key combination might conflict with some common terminal shortcuts...)
 2.  Within 5 seconds, hit any key to enter file transfer mode.
 3.  Press `CTRL + A` followed by 'S' to send a file.  
 4.  Select 'xmodem' option. 
@@ -181,11 +181,15 @@ Some common things to do.
 Refer to O2 manual.
 
 
-#### Minicom shortcuts
+### Minicom
 
 
+#### Minicom flags
+* `-con` use color
 
-A few useful ones are listed here for convenience.  To input a shortcut, first press `CTRL + A` and then:
+
+### Minicom shortcuts
+To input a shortcut, first press `CTRL + A` and then:
 
 | Key | Action |
 | --- | --- |

@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# Install minicom
-sudo apt install minicom
-
 # Communication parameters
-declare port-path='/dev/ttyUSB0'
-declare baud='921600'
+declare PortPath='/dev/ttyUSB0'
+declare Baud='921600'
+declare Term='xterm-256color'
+declare Color='off'  # looks kind of crappy with transparency
 
-# Run minicom
-minicom --baudrate $baud --device $port-path --8bit  
+
+minicom --baudrate $Baud --device $PortPath --8bit --term=$Term --color=$Color
