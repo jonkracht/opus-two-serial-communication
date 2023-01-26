@@ -41,7 +41,7 @@ It's probable that any of the others may be used to similar effect.
 
  
 Minicom is available in the Ubuntu 20.04 repository (edit: also, Pop_OS! 22.04) and so may simply installed using the `apt` package manager (in a terminal, run the command `sudo apt install minicom`).
-It can also be installed as a snap package or built directly from source.
+It can also be installed as a snap package or built from source.
 In any event, determine which installation method is best for your system and do so.
 
 
@@ -53,7 +53,7 @@ In any event, determine which installation method is best for your system and do
 ### 2.  Connect PC to O2 via cable
 
 
-O2 contains a micro-USB port through which serial communication may set up.  
+O2 contains a micro-USB port through which serial communication may be set up.  
 Find a cable that can connect your computer to this port.
 A USB-A port was available on the development computer and so the following steps reflect a connection of this type.
 
@@ -64,7 +64,8 @@ A USB-A port was available on the development computer and so the following step
 
 ### 3. Allow read/write permissions on O2
 
-Once the computer and O2 are physically connected via cable, determine the `[DEVICE_NAME]` using `dmesg` (a tool that prints kernel messages to stdout).
+Once the computer and O2 are physically connected via cable, determine the `[DEVICE_NAME]` using `dmesg` (a tool that prints kernel messages to stdout):
+`sudo dmesg | grep tty`
 [HERE](https://help.ubuntu.com/community/Minicom) is a thorough description on the process.
 In development, the `[DEVICE_NAME]` was found to be `ttyUSB0` and was located in the file system at `/dev/ttyUSB0`.
 
@@ -72,18 +73,18 @@ There are two methods to grant read/write access to the device:
 * Add user to the device's group
 * Manually modify the privileges to the device
 
-Of the two, the first option will needs only be performed once, while the second must be performed each time O2 is connected.  In any event, select one to your liking.
+Of the two, the first option will needs only be performed once, while the second must be performed each time O2 is connected.
 
 
 #### Manually modify privileges
 
-To grant both read and write privileges, execute the following command in the terminal of your favorite terminal (alacritty, kitty, gnome-terminal, konsole, etc.):
+To grant both read and write privileges, execute the following command in the terminal:
 
 
 ```BASH
 sudo chmod 666 /dev/[DEVICE_NAME]
 ```
-where `[DEVICE_NAME]` was determined in the steps above.
+where `[DEVICE_NAME]` was determined previously.
 
 
 
@@ -97,7 +98,9 @@ ls -lah /dev/[DEVICE_NAME]
 ```
 
 Common groups include `dialout` and `uucp`.
+
 Add the user to this group via the `usermod` command:
+
 ```bash
 sudo usermod -a -G [GROUP_NAME] [USER_NAME]
 ```
@@ -111,10 +114,9 @@ sudo usermod -a -G [GROUP_NAME] [USER_NAME]
 
 ### 4.  Create a configuration file
 
-We'll now create a configuration file setting communication parameters given in the [CVA/CVE Technical Guide](https://www.opustwoics.com/s/ARM-TG-Updaters.pdf) and shown here for convenience:
+We'll now create a configuration file setting communication parameters given in the [CVA/CVE Technical Guide](https://www.opustwoics.com/s/ARM-TG-Updaters.pdf) (Page 14) and shown here for convenience:
 
 ![O2-settings](/opus-two-serial-settings.png)  
-(Page 14)
 
 
 Explicitly, the parameters to be set are:
@@ -127,15 +129,16 @@ Explicitly, the parameters to be set are:
 
 
 Enter into minicom's setup menu by `sudo minicom -s`.
-(Note, minicom is executed here with superuser privileges since saving configuration files will modify the root file system.  If, instead, `sudo` is omitted, you would still be able to enter the setup menu but ultimately unable to save it for later use.)  
+(Note, minicom is executed here with superuser privileges since the config files to be created are saved in the root file system.  If, instead, `sudo` is omitted, you would still be able to enter the setup menu but ultimately unable to save it for later use.)  
 
 The menu system can be navigated using either arrow keys or vim-style 'hjkl' keys, ENTER, and ESCAPE.
 
 
 
 #### Steps to create configuration file:
-1. Input communication parameters by entering "Serial port setup" submenu
-    * Verify that "A - Serial Device" lists correct `[DEVICE_NAME]`
+
+1. Input communication parameters by entering "Serial port setup"
+    * Verify that "A - Serial Device" lists the correct `[DEVICE_NAME]`
     * Set "E - Bps/Par/Bits" to 921600 8N1
     * Set both Hard and Software Flow Controls (entries F and G) to 'No'
 
@@ -144,11 +147,11 @@ The menu system can be navigated using either arrow keys or vim-style 'hjkl' key
 
 3. Save configuration either as the default or to a new, ideally informative name
     * For default, select "Save setup as dfl". The default is used when minicom is run from the terminal without explicitly pointing to a configuration file
-    * For a new name, choose "Save setup as..".  A name such as "ttyUSB0.opus-two-cs" is advantageous in that it conveys information about what setup the specific configuration is designed for.
+    * For a new name, choose "Save setup as..".  A name such as "ttyUSB0.opus-two-cs" is advantageous in that it conveys information about for what setup the specific configuration is to be used.
 
 
-Configuration files are saved to `/etc/minicom/` and are given names like `minirc.dfl` or `minirc.ttyUSB0.opus-two-cs`.  An example configuration file `minirc.ttyUSB0.opus-two-cs` is included in this repository for reference.
-
+Configuration files are saved to `/etc/minicom/` and are given names like "minirc.dfl" or "minirc.ttyUSB0.opus-two-cs".  An example configuration file "minirc.ttyUSB0.opus-two-cs" is included in this repository for refrence.
+Also, a template configuration file is included in the installation and located at `/usr/share/doc/minicom/examples/minirc.dfl`.
 
 
 
@@ -181,10 +184,13 @@ Some common things to do.
 Refer to O2 manual.
 
 
-### Minicom
 
 
-#### Minicom flags
+
+## Minicom
+
+
+### Minicom flags
 * `-con` use color
 
 
@@ -201,14 +207,20 @@ To input a shortcut, first press `CTRL + A` and then:
 | O | Configure `minicom` |
 | P | Communication parameters |
 
-### Miscellaneous O2 notes
+
+
+![minicom-commands](/minicom-commands.png)  
+
+
+
+## Miscellaneous O2 notes
 * Pressing 'z' may cause the screen to stop jittering
-* CTRL + SHIFT + Q will reset the controller
+* CTRL + SHIFT + Q resets the controller
 * Minicom seems to not like environment variable `TERM=xterm-kitty`.  Manually reset via `export TERM=xterm-256color` 
 
 
 
-### Appendix
+## Appendix
 
 A few potentially helpful references:
 * https://www.poftut.com/install-use-linux-minicom-command-tutorial-examples/
