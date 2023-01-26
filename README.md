@@ -163,24 +163,26 @@ The appropriate terminal command will differ depending if a default or a custom 
 * If default was chosen, simply run `minicom` in the terminal.
 * If custom, run `minicom [CUSTOM_NAME]` in the terminal.
 
-At this point, the terminal should display "Welcome to the Opus-Two CVA Terminal Interface" and it should be possible to perform tasks detailed in the O2 manual.
+At this point, the terminal should display "Welcome to the Opus-Two CVA Terminal Interface" and it should be possible to perform tasks listed in the O2 manual.  
+If the display is jittering, press 'z'.
 
 
 
 
 ### 6.  Do things
 
-Some common things to do.
 
 #### Upload new Opus Two configuration file
-1.  Hold `CTRL + SHIFT + Q` to reset the controller (note, terminal menu and manual are inconsistent; also, this key combination might conflict with some common terminal shortcuts...)
-2.  Within 5 seconds, hit any key to enter file transfer mode.
+
+1.  Reset controller by holding `CTRL + SHIFT + Q` (Note, terminal menu and manual are inconsistent whether the shift key is required.  Also, this key combination might conflict with other terminal shortcuts...)
+2.  Within 5 seconds of resetting, press any key to enter file transfer mode.
 3.  Press `CTRL + A` followed by 'S' to send a file.  
 4.  Select 'xmodem' option. 
-5.  Select the configuration file (wit extension '.bin') to be uploaded to the controller.
+5.  Select the configuration file (with extension '.bin') to be uploaded to the controller.
+
 
 #### Modify tremolo parameters
-
+Frequency, depth.
 Refer to O2 manual.
 
 
@@ -189,35 +191,24 @@ Refer to O2 manual.
 
 ## Minicom
 
-
 ### Minicom flags
 * `-con` use color
 
 
 ### Minicom shortcuts
-To input a shortcut, first press `CTRL + A` and then:
 
-| Key | Action |
-| --- | --- |
-| X | Exit and reset |
-| Z | Help menu |
-| C | Clear screen |
-| S | Send files |
-| R | Receive files |
-| O | Configure `minicom` |
-| P | Communication parameters |
+Press CTRL + A then Z to enter help menu
+
+![minicom-commands](/minicom-commands.png){ width=60%, height:30px }
 
 
 
-![minicom-commands](/minicom-commands.png)  
+## Miscellaneous notes
+* Minicom seems to not like environment variable `TERM=xterm-kitty`.  Use a terminal whose $TERM variable is `xterm-i256color` or  manually reset via `export TERM=xterm-256color` or pass it in during function call via `--term=xterm-256color` flag
 
 
-
-## Miscellaneous O2 notes
-* Pressing 'z' may cause the screen to stop jittering
-* CTRL + SHIFT + Q resets the controller
-* Minicom seems to not like environment variable `TERM=xterm-kitty`.  Manually reset via `export TERM=xterm-256color` 
-
+## TODO
+* Unable to start main controller second time (must be unplugged and replugged to restart communication)
 
 
 ## Appendix
