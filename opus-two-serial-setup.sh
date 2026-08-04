@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -e "\nWelcome to the Minicom frontend\n"
+echo -e "\nMinicom/Opus Two auto-configurator\n"
 
 # Communication parameters
 declare DefaultPath='/dev/ttyUSB0'
@@ -10,23 +10,25 @@ declare Color='off'  # on/off; color looks bad with terminal transparency
 
 
 # Display output of dmesg to determine device path 
-echo "Relevant output of dmesg:"
+echo "Relevant dmesg output:"
 echo "******************************"
+echo "(Enter root password)"
 sudo dmesg | grep attached
 echo "******************************"
 
 echo " "
-read -p "Enter path to device or press enter to use $DefaultPath:  " inputPath
+read -p -r "Enter path to device or press enter to use $DefaultPath:  " inputPath
 
-echo $inputPath
+echo "$inputPath"
 
-if [$inputPath -eq ""] 
+if [ -z "$inputPath" ]
 then
     PortPath=$DefaultPath
 else
     PortPath=$inputPath
 fi
 
-echo $PortPath
+echo "$PortPath"
 
-minicom --baudrate $Baud --device $PortPath --8bit --term=$Term --color=$Color
+# Start minicom
+minicom --baudrate "$Baud" --device "$PortPath" --8bit --term="$Term" --color="$Color"
