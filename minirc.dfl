@@ -1,0 +1,11 @@
+# Machine-generated file - use "minicom -s" to change parameters.
+pu pname3           YUNYNxmodem
+pu pprog3           /usr/bin/lrzsz-sx -vv -X
+pu port             /dev/ttyUSB0
+pu baudrate         921600
+pu bits             8
+pu parity           N
+pu stopbits         1
+pu updir            /home/jon/Downloads
+pu downdir          /home/jon/Downloads
+pu rtscts           No 
