@@ -1,59 +1,60 @@
-   
+# Configuring an Opus Two controller using Linux
 
-# Configuring the Opus Two Control System with Linux
+The following details a procedure to enable serial communication between a Linux computer and an [Opus Two](https://www.opustwoics.com/) (hereafter to referred to simply as "O2") controller card.
 
-The following details a procedure to enable communication between a computer running a GNU/Linux operating system and the [Opus Two Control System](https://www.opustwoics.com/), a system designed for the control of pipe organs and hereafter referred to simply as "O2".
+The method was initially developed on a laptop running Ubuntu 20.04.  Pop!_OS 22.04 and Arch Linux were later used for fine-tuning and so this process should be general-enough so that it is broadly portable to other flavors of Linux.
 
-A laptop running Ubuntu 20.04 was used during initial development and early updates.  Later modifications were done in Pop_OS! 22.04.
-The procedure should be general-enough to be easily portable to other flavors of Linux.
-
-
-**Initial development July 2021
-Updated January 2022, August 2022, January 2023**
+Most of the steps are performed in the terminal so you must have something like kitty, alacritty, ghosty, konsole, gnome-terminal, etc. installed.
 
 
 
 
+***Summary of the procedure***  
 
-## Summary of the procedure  
-1. Install a terminal emulator (minicom) 
-2. Connect the computer to O2 via cable  
-3. Allow read/write permissions on O2 
-4. Make a configuration file
-5. Begin communication  
-6. Do things (ex. upload configurations files, modify tremolo parameters, etc.)  
-
-
+1. Install a serial communication program (minicom) on the Linux computer 
+2. Connect the computer to the O2 controller card via cable  
+3. Grant read/write permissions on device 
+4. Create a minicom configuration file
+5. Begin serial communication  
+6. Do things!  (modify system configurations files, tremolo parameters, etc.)
 
 
-### 1.  Install a terminal emulator
+**Initial development July 2021**
+
+**Updated January 2022, August 2022, January 2023, August 2026**
 
 
-We'll use minicom, a free and open source, terminal-based serial port communication program to interface with O2.  
+## Procedure
+
+### 1.  Install a serial communication program on the Linux computer
 
 
-Some documentation on minicom:
+We'll use minicom, a free and open source, terminal-based serial port communication program.  
+
+
+Some documentation:
 * [Source code](https://salsa.debian.org/minicom-team/minicom)  
 * [User's manual](https://www.man7.org/linux/man-pages/man1/minicom.1.html)
 
-During initial development, other terminal emulators (putty, cutecom, xterm, uxterm) were briefly examined but minicom was ultimately chosen.
+
+Other terminal emulators (putty, cutecom, xterm, uxterm) were briefly examined during initial development but minicom was ultimately chosen.
 It's probable that any of the others may be used to similar effect.
 
- 
-Minicom is available in the Ubuntu 20.04 repository (edit: also, Pop_OS! 22.04) and so may simply installed using the `apt` package manager (in a terminal, run the command `sudo apt install minicom`).
-It can also be installed as a snap package or built from source.
-In any event, determine which installation method is best for your system and do so.
+
+For each of the machines used in development (Ubuntu 20.04, Pop 22.04 and Arch Linux in 2026), minicom was available in the default repositories.  In this case, you may simply install it via a command like `sudo apt install minicom` or `sudo pacman -S minicom`.
+If it is not provided by default, [build it from source code](https://salsa.debian.org/minicom-team/minicom).
+
+
+As of August 2026, minicom version 2.11.1 was used.
 
 
 
 
+### 2. Connect the computer to the O2 controller card via cable  
 
 
+The O2 controller card contains two micro-USB ports.  The one marked 'TERM' is used for serial communication.
 
-### 2.  Connect PC to O2 via cable
-
-
-O2 contains a micro-USB port through which serial communication may be set up.  
 Find a cable that can connect your computer to this port.
 A USB-A port was available on the development computer and so the following steps reflect a connection of this type.
 
@@ -62,49 +63,29 @@ A USB-A port was available on the development computer and so the following step
 
 
 
-### 3. Allow read/write permissions on O2
+### 3. Grant permissions
 
-Once the computer and O2 are physically connected via cable, determine the `[DEVICE_NAME]` using `dmesg` (a tool that prints kernel messages to stdout):
-`sudo dmesg | grep tty`
-[HERE](https://help.ubuntu.com/community/Minicom) is a thorough description on the process.
-In development, the `[DEVICE_NAME]` was found to be `ttyUSB0` and was located in the file system at `/dev/ttyUSB0`.
-
-There are two methods to grant read/write access to the device:
-* Add user to the device's group
-* Manually modify the privileges to the device
-
-Of the two, the first option will needs only be performed once, while the second must be performed each time O2 is connected.
-
-
-#### Manually modify privileges
-
-To grant both read and write privileges, execute the following command in the terminal:
-
-
-```BASH
-sudo chmod 666 /dev/[DEVICE_NAME]
-```
-where `[DEVICE_NAME]` was determined previously.
-
-
-
-
-#### Add user to device's group
-
-Determine of which group the device is a member by executing:
-
-```bash
-ls -lah /dev/[DEVICE_NAME]
-```
-
-Common groups include `dialout` and `uucp`.
-
-Add the user to this group via the `usermod` command:
+On a Linux system, the scope of the actions a user may perform is granted by the system administrator or root user.  
+To allow serial communication, the user must be a member of the `dialout` group on a Debian-based distribution and the `uucp` group on Arch.  To add the user to one of these groups:
 
 ```bash
 sudo usermod -a -G [GROUP_NAME] [USER_NAME]
 ```
 
+In addition, the read-write permissions to the device may need to be manually set.
+With the computer and the controller card physically connected by a cable, determine the `[DEVICE_NAME]`:
+```bash
+sudo dmesg | grep tty
+```
+
+[HERE](https://help.ubuntu.com/community/Minicom) is some additional description.
+In development, the `[DEVICE_NAME]` was `ttyUSB0` and was located at `/dev/ttyUSB0`.
+
+To grant both read and write privileges:
+```BASH
+sudo chmod 666 /dev/[DEVICE_NAME]
+```
+where `[DEVICE_NAME]` was determined previously via `dmesg`.
 
 
 
@@ -112,14 +93,17 @@ sudo usermod -a -G [GROUP_NAME] [USER_NAME]
 
 
 
-### 4.  Create a configuration file
 
-We'll now create a configuration file setting communication parameters given in the [CVA/CVE Technical Guide](https://www.opustwoics.com/s/ARM-TG-Updaters.pdf) (Page 14) and shown here for convenience:
+
+
+### 4.  Create a minicom configuration file
+
+We'll now create a minicom configuration file setting communication parameters listed in the [CVA/CVE Technical Guide](https://www.opustwoics.com/s/ARM-TG-Updaters.pdf) (Page 14) and shown here for convenience:
 
 ![O2-settings](/opus-two-serial-settings.png)  
 
 
-Explicitly, the parameters to be set are:
+Explicitly, the parameters being set are:
 * Baud rate 921600 
 * 8 bit data 
 * No Parity 
@@ -128,92 +112,178 @@ Explicitly, the parameters to be set are:
 
 
 
-Enter into minicom's setup menu by `sudo minicom -s`.
-(Note, minicom is executed here with superuser privileges since the config files to be created are saved in the root file system.  If, instead, `sudo` is omitted, you would still be able to enter the setup menu but ultimately unable to save it for later use.)  
+Enter minicom's setup menu:
+```bash
+sudo minicom -s
+```
+
+Minicom is executed here with superuser privileges since the config file being created with be saved in the root file system.  If, instead, `sudo` is omitted, you would be able enter the setup and modify parameters but ultimately unable to save it for later use.
 
 The menu system can be navigated using either arrow keys or vim-style 'hjkl' keys, ENTER, and ESCAPE.
 
 
 
-#### Steps to create configuration file:
+#### Steps to create configuration file
 
-1. Input communication parameters by entering "Serial port setup"
-    * Verify that "A - Serial Device" lists the correct `[DEVICE_NAME]`
+1. Input communication parameters by entering "Serial port setup" sub-menu
+    * Verify that "A - Serial Device" lists the correct device path
     * Set "E - Bps/Par/Bits" to 921600 8N1
     * Set both Hard and Software Flow Controls (entries F and G) to 'No'
 
-2. Set the location from which files are to be up/downloaded in "Filenames and paths"
-    * Enter the paths in the "Download directory" and "Upload directory" fields.  If desired, may be the same location.
+2. If desired, set the location from which files will be up/downloaded in the "Filenames and paths" sub-menu
 
-3. Save configuration either as the default or to a new, ideally informative name
-    * For default, select "Save setup as dfl". The default is used when minicom is run from the terminal without explicitly pointing to a configuration file
-    * For a new name, choose "Save setup as..".  A name such as "ttyUSB0.opus-two-cs" is advantageous in that it conveys information about for what setup the specific configuration is to be used.
+3. Save configuration either as the default or with a application-specific name
+    * For default, select "Save setup as dfl". The default is used when minicom is run without explicitly pointing to a configuration file (i.e. simply `minicom`)Once spell check is active, use these normal mode shortcuts to manage your typos:]s – Jump to the next misspelled word.[s – Jump to the previous misspelled word.z= – View spelling suggestions for the word under the cursor.1z= – Automatically fix the word with the first (most likely) suggestion.zg – Add the word under your cursor to your dictionary as a good word.zw – Mark the word under your cursor as incorrect (wrong)
+    * For an application-specific name, select "Save setup as..".  A name like "ttyUSB0.opus-two-cs" helps to provide context about the specific configuration.  `minirc.` will be prepended to this name in the eventual file saved.
+
+The location to which the config is saved varies between systems but will likely be `/etc/minicom` or `/etc`.
+If it is elsewhere, locate via:
+```bash
+sudo find \ -name "minirc.*"
+```
+
+Some minicom installations include an example config located at `/usr/share/doc/minicom/examples/minirc.dfl`.
+Additionally, a sample config files are included in this repo for reference.
 
 
-Configuration files are saved to `/etc/minicom/` and are given names like "minirc.dfl" or "minirc.ttyUSB0.opus-two-cs".  An example configuration file "minirc.ttyUSB0.opus-two-cs" is included in this repository for refrence.
-Also, a template configuration file is included in the installation and located at `/usr/share/doc/minicom/examples/minirc.dfl`.
 
 
 
 
 
-### 5.  Begin communication
+### 5.  Begin serial communication
 
 The appropriate terminal command will differ depending if a default or a custom configuration file was created in the previous step.
-* If default was chosen, simply run `minicom` in the terminal.
-* If custom, run `minicom [CUSTOM_NAME]` in the terminal.
-
-At this point, the terminal should display "Welcome to the Opus-Two CVA Terminal Interface" and it should be possible to perform tasks listed in the O2 manual.  
-If the display is jittering, press 'z'.
+* To run the default configuration, simply run `minicom`
+* To run some other configuration, run `minicom [CUSTOM_CONFIG_NAME]` where 'minirc.' is removed from the file name
 
 
+Serial communication should now be initiated and "Welcome to the Opus-Two CVA Terminal Interface" should be visible in the terminal.
+
+If the display is jittering, press 'z' to stabilize it.
 
 
-### 6.  Do things
+#### Alternative communication method
+
+Rather than creating a config file, pass serial communication parameters via flags:
+
+```bash
+minicom --baudrate 921600 --device /dev/ttyUSB0 --8bit --term=xterm-256color
+```
+
+Minicom does not provide flags for Hardware or Software flow control so it's possible this method may not work.
+
+A bash script is included in this repository that automatically sets parameters and initializes communication with the O2 controller.
+Grant execution privileges and run via `./opus-two-serial-setup.sh`
 
 
-#### Upload new Opus Two configuration file
-
-1.  Reset controller by holding `CTRL + SHIFT + Q` (Note, terminal menu and manual are inconsistent whether the shift key is required.  Also, this key combination might conflict with other terminal shortcuts...)
-2.  Within 5 seconds of resetting, press any key to enter file transfer mode.
-3.  Press `CTRL + A` followed by 'S' to send a file.  
-4.  Select 'xmodem' option. 
-5.  Select the configuration file (with extension '.bin') to be uploaded to the controller.
+### 6.  Do things!
 
 
-#### Modify tremolo parameters
-Frequency, depth.
-Refer to O2 manual.
+#### Upload configuration file to the controller
+
+##### Dependencies
+
+Organ-specific config files are input to the O2 controller card via the `xmodem` protocol.  
+Since minicom itself does not perform file transfers, additional software is required.  
+Specifically, the `sx` binary is recommended.  
+On may Linux distributions, it is provided by the `lrzsz` package and invoked via `lrzsz-sx`.
+
+Once the `sx` binary is installed, ensure that your minicom configuration correctly invokes it.  In the "File transfer protocols" section of the minicom setup, ensure that the path to the `sx` executable is correct (i.e. matches `which lrzsz-sx`) and it is called with the necessary flags.  
+The `-X` flag ensures that the xmodem protocol (rather than ymodem or zmodem) is used.  
+Properly configured, the "Program" column should show something like `/usr/bin/lrzsz-sx -vv -X`.
+
+
+##### Procedure
+
+With communication initiated and the terminal showing the main menu of the O2 controller:
+
+1.  Reset controller via `CTRL + Q` or `CTRL + SHIFT + Q`.
+2.  Within five seconds of reset, press any key to place the controller into file transfer mode.
+3.  Press `CTRL + A` followed by `S` to transfer a file via minicom.  
+4.  Select the 'xmodem' option. 
+5.  Select the config (with extension '.bin') to be uploaded to the controller.
+
+A window should open displaying transfer progress.  
+If the transfer was successful and the config properly written/compiled, the organ should now perform in the manners indicated by the new configuration file.
+
+
+
+
+#### Modify tremolo behavior
+
+Alter frequency and/or depth.
+
+Refer to Opus Two documentation.
 
 
 
 
 
-## Minicom
-
-### Minicom flags
-* `-con` use color
-
-
-### Minicom shortcuts
-
-Press CTRL + A then Z to enter help menu
-
-![minicom-commands](/minicom-commands.png){ width=60%, height:30px }
-
-
-
-## Miscellaneous notes
-* Minicom seems to not like environment variable `TERM=xterm-kitty`.  Use a terminal whose $TERM variable is `xterm-i256color` or  manually reset via `export TERM=xterm-256color` or pass it in during function call via `--term=xterm-256color` flag
 
 
 ## TODO
-* Unable to start main controller second time (must be unplugged and replugged to restart communication)
+
+* Unable to initiate communication with controller a second time (must be unplugged and replugged)
+* Where are the rest of minicom's config parameters saved?  minirc.dfl only shows a few.  Perhaps only saves parameters that are "non-default".
+* Commandline flag to set flow controls
+* Testing controller card seems to timeout/freeze serial communication after about a minute of uptime.  This correlates to a yellow LED going from blinking to solidly on.
+* Investigate modern serial communication programs:  TIO and GTKTERM
+* TeraTerm link is broken in O2 documentation.  Is project still active?
 
 
-## Appendix
 
-A few potentially helpful references:
+## Appendices
+
+
+### Opus Two
+
+The UART protocol is used between the computer and controller card.  
+The controller includes a USB to UART bridge to enable the protocol between modern machines.
+
+
+### Minicom notes
+
+#### Flags
+* `-c [on/off]` controls whether minicom's menus are displayed in color.
+* `-capturefile /PATH/TO/FILE`  saves minicom output to a log file for later examination
+
+
+#### Shortcuts
+
+Show help menu via C-A then z
+
+![minicom-commands](/minicom-commands.png)
+
+
+#### Misc
+
+In the config file, flow controls are set via the 'rtscts' parameter.
+The acronyms stand for "request to send" and "clear to send".
+
+
+##### $TERM value
+
+Minicom seems to not like environment variable `TERM=xterm-kitty`.  
+Use a terminal whose $TERM variable is `xterm-i256color` or manually reset via `export TERM=xterm-256color` or pass into minicom by including `--term=xterm-256color` flag.
+
+
+### Alternate transfer method
+
+Set controller into waiting-for-transfer mode by resetting (C-Q) and hitting any key.
+Input into another terminal window:
+
+```bash
+lrzsz-sx -k /PATH/TO/O2/config/bin < /PATH/TO/PORT > /PATH/TO/PORT
+```
+
+This method will perhaps provide more informative debugging output than minicom's.
+
+
+
+
+## References
+
 * https://www.poftut.com/install-use-linux-minicom-command-tutorial-examples/
 * https://bloggerbust.ca/post/how-to-configure-minicom-to-connect-over-usb-serial-uart/
 * https://www.centennialsoftwaresolutions.com/post/configure-minicom-for-a-usb-to-serial-converter
