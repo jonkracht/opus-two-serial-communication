@@ -42,10 +42,10 @@ It's probable that any of the others may be used to similar effect.
 
 
 For each of the machines used in development (Ubuntu 20.04, Pop 22.04 and Arch Linux in 2026), minicom was available in the default repositories.  In this case, you may simply install it via a command like `sudo apt install minicom` or `sudo pacman -S minicom`.
-If it is not provided by default, [build it from source code](https://salsa.debian.org/minicom-team/minicom).
+If it is not provided by default, [build it from source](https://salsa.debian.org/minicom-team/minicom).
 
 
-As of August 2026, minicom version 2.11.1 was used.
+Minicom version 2.11.1 was used in August 2026.
 
 
 
@@ -65,14 +65,14 @@ A USB-A port was available on the development computer and so the following step
 
 ### 3. Grant permissions
 
-On a Linux system, the scope of the actions a user may perform is granted by the system administrator or root user.  
-To allow serial communication, the user must be a member of the `dialout` group on a Debian-based distribution and the `uucp` group on Arch.  To add the user to one of these groups:
+On a Linux system, the scope of the actions a user may perform is set by the system administrator or root user.  
+To allow serial communications, the user must be a member of the `dialout` group on a Debian-based distribution and the `uucp` group on Arch.  To add the user to one of these groups:
 
 ```bash
 sudo usermod -a -G [GROUP_NAME] [USER_NAME]
 ```
 
-In addition, the read-write permissions to the device may need to be manually set.
+In addition, the device's read-write permissions may need to be manually set.
 With the computer and the controller card physically connected by a cable, determine the `[DEVICE_NAME]`:
 ```bash
 sudo dmesg | grep tty
@@ -133,13 +133,13 @@ The menu system can be navigated using either arrow keys or vim-style 'hjkl' key
 2. If desired, set the location from which files will be up/downloaded in the "Filenames and paths" sub-menu
 
 3. Save configuration either as the default or with a application-specific name
-    * For default, select "Save setup as dfl". The default is used when minicom is run without explicitly pointing to a configuration file (i.e. simply `minicom`)Once spell check is active, use these normal mode shortcuts to manage your typos:]s – Jump to the next misspelled word.[s – Jump to the previous misspelled word.z= – View spelling suggestions for the word under the cursor.1z= – Automatically fix the word with the first (most likely) suggestion.zg – Add the word under your cursor to your dictionary as a good word.zw – Mark the word under your cursor as incorrect (wrong)
+    * For default, select "Save setup as dfl". The default is used when minicom is run without explicitly pointing to a configuration file (i.e. simply `minicom`)
     * For an application-specific name, select "Save setup as..".  A name like "ttyUSB0.opus-two-cs" helps to provide context about the specific configuration.  `minirc.` will be prepended to this name in the eventual file saved.
 
 The location to which the config is saved varies between systems but will likely be `/etc/minicom` or `/etc`.
 If it is elsewhere, locate via:
 ```bash
-sudo find \ -name "minirc.*"
+sudo find / -name "minirc.*"
 ```
 
 Some minicom installations include an example config located at `/usr/share/doc/minicom/examples/minirc.dfl`.
@@ -184,13 +184,14 @@ Grant execution privileges and run via `./opus-two-serial-setup.sh`
 
 ##### Dependencies
 
-Organ-specific config files are input to the O2 controller card via the `xmodem` protocol.  
-Since minicom itself does not perform file transfers, additional software is required.  
-Specifically, the `sx` binary is recommended.  
+Organ-specific config files are input to the O2 controller card via the `xmodem` protocol.
+Since minicom itself does not perform file transfers, additional software is required.
+Specifically, the `sx` binary is recommended.
 On may Linux distributions, it is provided by the `lrzsz` package and invoked via `lrzsz-sx`.
 
-Once the `sx` binary is installed, ensure that your minicom configuration correctly invokes it.  In the "File transfer protocols" section of the minicom setup, ensure that the path to the `sx` executable is correct (i.e. matches `which lrzsz-sx`) and it is called with the necessary flags.  
-The `-X` flag ensures that the xmodem protocol (rather than ymodem or zmodem) is used.  
+Once the `sx` binary is installed, ensure that your minicom configuration correctly invokes it.
+In the "File transfer protocols" section of the minicom setup, ensure that the path to the `sx` executable is correct (i.e. matches `which lrzsz-sx`) and it is called with the necessary flags.
+The `-X` flag ensures that the xmodem protocol (rather than ymodem or zmodem) is used.
 Properly configured, the "Program" column should show something like `/usr/bin/lrzsz-sx -vv -X`.
 
 
@@ -204,7 +205,7 @@ With communication initiated and the terminal showing the main menu of the O2 co
 4.  Select the 'xmodem' option. 
 5.  Select the config (with extension '.bin') to be uploaded to the controller.
 
-A window should open displaying transfer progress.  
+A window should open displaying transfer progress.
 If the transfer was successful and the config properly written/compiled, the organ should now perform in the manners indicated by the new configuration file.
 
 
@@ -228,7 +229,7 @@ Refer to Opus Two documentation.
 * Where are the rest of minicom's config parameters saved?  minirc.dfl only shows a few.  Perhaps only saves parameters that are "non-default".
 * Commandline flag to set flow controls
 * Testing controller card seems to timeout/freeze serial communication after about a minute of uptime.  This correlates to a yellow LED going from blinking to solidly on.
-* Investigate modern serial communication programs:  TIO and GTKTERM
+* Investigate modern serial communication programs:  TIO, screen and GTKTERM (does not support xmodem protocol so not adequate)
 * TeraTerm link is broken in O2 documentation.  Is project still active?
 
 
@@ -238,7 +239,7 @@ Refer to Opus Two documentation.
 
 ### Opus Two
 
-The UART protocol is used between the computer and controller card.  
+The UART protocol is used between the computer and controller card.
 The controller includes a USB to UART bridge to enable the protocol between modern machines.
 
 
