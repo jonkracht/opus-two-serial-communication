@@ -205,8 +205,12 @@ With communication initiated and the terminal showing the main menu of the O2 co
 4.  Select the 'xmodem' option. 
 5.  Select the config (with extension '.bin') to be uploaded to the controller.
 
-A window should open displaying transfer progress.
-If the transfer was successful and the config properly written/compiled, the organ should now perform in the manners indicated by the new configuration file.
+If the file selector opens in a location other than where the config is located, you may navigate the file system by pressing spacebar twice to enter into a directory.
+Selecting `[..]` will navigate to the parent directory.  Once the config has been located, highlight it by pressing spacebar once.
+Hightlight "[Okay]" in the toolbar at the bottom of the screen and press Enter to begin the transfer.
+A window should open displaying progress.
+
+If the transfer was successful and the config was properly written/compiled, the organ should now perform in the manner specified by the uploaded config.
 
 
 
@@ -229,7 +233,7 @@ Refer to Opus Two documentation.
 * Where are the rest of minicom's config parameters saved?  minirc.dfl only shows a few.  Perhaps only saves parameters that are "non-default".
 * Commandline flag to set flow controls
 * Testing controller card seems to timeout/freeze serial communication after about a minute of uptime.  This correlates to a yellow LED going from blinking to solidly on.
-* Investigate modern serial communication programs:  TIO, screen and GTKTERM (does not support xmodem protocol so not adequate)
+* Investigate modern serial communication programs:  TIO and screen.  tabby, cetus, and GTKTERM do not support xmodem protocol.  Seems like xmodem is not being supported.
 * TeraTerm link is broken in O2 documentation.  Is project still active?
 
 
